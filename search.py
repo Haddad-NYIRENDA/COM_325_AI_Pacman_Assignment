@@ -289,6 +289,56 @@ def function(problem,state,heuristic):
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
+        # queueXY: ((x,y),[path]) #
+        queueXY = MyPriorityQueueWithFunction(problem,function)
+
+        path = [] # Every state keeps it's path from the starting state
+        visited = [] # Visited states
+
+
+        # Check if initial state is goal state #
+        if problem.isGoalState(problem.getStartState()):
+            return []
+
+        # Add initial state. Path is an empty list #
+        element = (problem.getStartState(),[])
+
+        queueXY.push(element,heuristic)
+
+        while(True):
+
+            # Terminate condition: can't find solution #
+            if queueXY.isEmpty():
+                return []
+
+            # Get informations of current state #
+            xy,path = queueXY.pop() # Take position and path
+
+            # State is already been visited. A path with lower cost has previously
+            # been found. Overpass this state
+            if xy in visited:
+                continue
+
+            visited.append(xy)
+
+            # Terminate condition: reach goal #
+            if problem.isGoalState(xy):
+                return path
+
+            # Get successors of current state #
+            succ = problem.getSuccessors(xy)
+
+            # Add new states in queue and fix their path #
+            if succ:
+                for item in succ:
+                    if item[0] not in visited:
+
+                        # Like previous algorithms: we should check in this point if successor
+                        # is a goal state so as to follow lectures code
+
+                        newPath = path + [item[1]] # Fix new path
+                        element = (item[0],newPath)
+                        queueXY.push(element,heuristic)
     util.raiseNotDefined()
 
 
