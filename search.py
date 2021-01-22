@@ -194,6 +194,67 @@ def breadthFirstSearch(problem):
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     "*** YOUR CODE HERE ***"
+    from util import PriorityQueue
+
+    # queueXY: ((x,y),[path],priority) #
+    queueXY = PriorityQueue()
+
+    visited = [] # Visited states
+    path = [] # Every state keeps it's path from the starting state
+
+    # Check if initial state is goal state #
+    if problem.isGoalState(problem.getStartState()):
+        return []
+
+    # Start from the beginning and find a solution, path is empty list #
+    # with the cheapest priority                                       #
+    queueXY.push((problem.getStartState(),[]),0)
+
+    while(True):
+
+        # Terminate condition: can't find solution #
+        if queueXY.isEmpty():
+            return []
+
+        # Get informations of current state #
+        xy,path = queueXY.pop() # Take position and path
+        visited.append(xy)
+
+        # This only works for autograder    #
+        # In lectures we check if a state is a goal when we find successors #
+
+        # Terminate condition: reach goal #
+        if problem.isGoalState(xy):
+            return path
+
+        # Get successors of current state #
+        succ = problem.getSuccessors(xy)
+
+        # Add new states in queue and fix their path #
+        if succ:
+            for item in succ:
+                if item[0] not in visited and (item[0] not in (state[2][0] for state in queueXY.heap)):
+
+                    #    Like previous algorithms: we should check in this point if successor
+                    #    is a goal state so as to follow lectures code
+
+                    newPath = path + [item[1]]
+                    pri = problem.getCostOfActions(newPath)
+
+                    queueXY.push((item[0],newPath),pri)
+
+                # State is in queue. Check if current path is cheaper from the previous one #
+                elif item[0] not in visited and (item[0] in (state[2][0] for state in queueXY.heap)):
+                    for state in queueXY.heap:
+                        if state[2][0] == item[0]:
+                            oldPri = problem.getCostOfActions(state[2][1])
+
+                    newPri = problem.getCostOfActions(path + [item[1]])
+
+                    # State is cheaper with his hew father -> update and fix parent #
+                    if oldPri > newPri:
+                        newPath = path + [item[1]]
+                        queueXY.update((item[0],newPath),newPri)
     util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
