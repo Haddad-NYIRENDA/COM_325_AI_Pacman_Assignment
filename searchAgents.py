@@ -4,7 +4,7 @@
 # educational purposes provided that (1) you do not distribute or publish
 # solutions, (2) you retain this notice, and (3) you provide clear
 # attribution to UC Berkeley, including a link to http://ai.berkeley.edu.
-# 
+#
 # Attribution Information: The Pacman AI projects were developed at UC Berkeley.
 # The core projects and autograders were primarily created by John DeNero
 # (denero@cs.berkeley.edu) and Dan Klein (klein@cs.berkeley.edu).
@@ -288,6 +288,14 @@ class CornersProblem(search.SearchProblem):
         # Please add any code here which you would like to use
         # in initializing the problem
         "*** YOUR CODE HERE ***"
+        self.visited,self.visitedlist = {},[]               #tuple and list storing of corners
+        self.cornersVisited = []                            #conners dictionary
+        for corner in self.corners:
+            if self.startingPosition == corner:
+                self.cornersVisited.append((corner,True))   #Initializing visitedcorners and visited nodes
+            else:
+                self.cornersVisited.append((corner,False))
+        self.cornersVisited = tuple(self.cornersVisited)
 
     def getStartState(self):
         """
